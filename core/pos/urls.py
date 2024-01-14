@@ -1,4 +1,6 @@
 from django.urls import path
+
+from core.pos.views.atributo.views import *
 from core.pos.views.category.views import *
 from core.pos.views.client.views import *
 from core.pos.views.company.views import CompanyUpdateView
@@ -24,6 +26,11 @@ urlpatterns = [
     path('product/add/', ProductCreateView.as_view(), name='product_create'),
     path('product/update/<int:pk>/', ProductUpdateView.as_view(), name='product_update'),
     path('product/delete/<int:pk>/', ProductDeleteView.as_view(), name='product_delete'),
+    # atributos
+    path('atributo/', AtributosListView.as_view(), name='atributos_list'),
+    # path('product/add/', ProductCreateView.as_view(), name='product_create'),
+    path('atributo/update/<int:pk>/', AtributoUpdateView.as_view(), name='atributo_update'),
+    # path('product/delete/<int:pk>/', ProductDeleteView.as_view(), name='product_delete'),
     # sale
     path('sale/', SaleListView.as_view(), name='sale_list'),
     path('sale/add/', SaleCreateView.as_view(), name='sale_create'),
