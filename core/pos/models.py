@@ -55,6 +55,7 @@ class Product(models.Model):
         ordering = ['id']
 
 
+
 class Client(models.Model):
     names = models.CharField(max_length=150, verbose_name='Nombres')
     dni = models.CharField(max_length=10, unique=True, verbose_name='Número de cedula')
