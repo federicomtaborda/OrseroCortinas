@@ -5,6 +5,7 @@ var atributos = {
             autoWidth: false,
             destroy: true,
             deferRender: true,
+            order: [0, 'asc'] [1, 'asc'],
             ajax: {
                 url: pathname,
                 type: 'POST',
@@ -17,7 +18,8 @@ var atributos = {
                 }
             },
             columns: [
-                {"data": "id"},
+                // {"data": "id"},
+                {"data": "producto"},
                 {"data": "atributo"},
                 {"data": "costo"},
                 {"data": "id"},
@@ -43,4 +45,9 @@ var atributos = {
 
 $(function () {
     atributos.list();
+
+    $('.select2').select2({
+        theme: "bootstrap4",
+        language: 'es'
+    });
 });

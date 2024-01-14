@@ -20,8 +20,15 @@ class AtributosListView(ValidatePermissionRequiredMixin, ListView):
             action = request.POST['action']
             if action == 'search':
                 data = []
-                for i in Atributos.objects.all():
-                    data.append(i.toJSON())
+                for atributo in Atributos.objects.all():
+                    i = {
+                        'id': atributo.id,
+                        'producto': atributo.producto.name,
+                        'atributo': atributo.atributo,
+                        'costo': atributo.costo,
+                    }
+                    data.append(i)
+                print(i)
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

@@ -58,13 +58,13 @@ class Product(models.Model):
 
 
 class Atributos(models.Model):
-    producto = models.ForeignKey(Product, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Producto')
     atributo = models.CharField(max_length=150, verbose_name='Atributo')
     costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, verbose_name='Costo')
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['pvp'] = f'{self.costo:.2f}'
+        item['costo'] = f'{self.costo:.2f}'
         return item
 
     class Meta:
