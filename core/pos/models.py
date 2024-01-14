@@ -8,7 +8,6 @@ from django.forms import model_to_dict
 from config import settings
 from core.pos.choices import genders
 
-
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     desc = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
