@@ -8,6 +8,7 @@ from django.forms import model_to_dict
 from config import settings
 from core.pos.choices import genders
 
+
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     desc = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
@@ -57,7 +58,7 @@ class Product(models.Model):
 
 
 class Atributos(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Product, on_delete=models.CASCADE)
     atributo = models.CharField(max_length=150, verbose_name='Atributo')
     costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, verbose_name='Costo')
 
@@ -70,7 +71,6 @@ class Atributos(models.Model):
         verbose_name = 'Atributo'
         verbose_name_plural = 'Atributos'
         ordering = ['id']
-
 
 
 class Client(models.Model):
@@ -171,7 +171,8 @@ class Sale(models.Model):
         super(Sale, self).delete()
 
     def calculate_invoice(self):
-        subtotal = self.saleproduct_set.all().aggregate(result=Coalesce(Sum(F('price') * F('cant')), 0.00, output_field=FloatField())).get('result')
+        subtotal = self.saleproduct_set.all().aggregate(
+            result=Coalesce(Sum(F('price') * F('cant')), 0.00, output_field=FloatField())).get('result')
         self.subtotal = subtotal
         self.total_iva = self.subtotal * float(self.iva)
         self.total = float(self.subtotal) + float(self.total_iva)

@@ -9,6 +9,13 @@ class AtributoForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['atributo'].widget.attrs['autofocus'] = True
 
+    widgets = {
+        'producto': forms.Select(attrs={
+            'class': 'select2',
+            'style': 'width: 100%'
+        }),
+    }
+
     class Meta:
         model = Atributos
         fields = '__all__'
