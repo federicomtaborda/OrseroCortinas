@@ -42,6 +42,7 @@ class Product(models.Model):
         item['category'] = self.category.toJSON()
         item['image'] = self.get_image()
         item['pvp'] = f'{self.pvp:.2f}'
+        item['atributos'] = [i.toJSON() for i in self.atributos_set.all()]
         return item
 
     def get_image(self):
@@ -52,6 +53,22 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
+        ordering = ['id']
+
+
+class Atributos(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    atributo = models.CharField(max_length=150, verbose_name='Atributo')
+    costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, verbose_name='Costo')
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['pvp'] = f'{self.costo:.2f}'
+        return item
+
+    class Meta:
+        verbose_name = 'Atributo'
+        verbose_name_plural = 'Atributos'
         ordering = ['id']
 
 
