@@ -4,6 +4,35 @@ from django.forms import ModelForm
 from core.pos.models import *
 
 
+class AtributoForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['atributo'].widget.attrs['autofocus'] = True
+
+    widgets = {
+        'producto': forms.Select(attrs={
+            'class': 'select2',
+            'style': 'width: 100%'
+        }),
+    }
+
+    class Meta:
+        model = Atributos
+        fields = '__all__'
+
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+
+
 class CategoryForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

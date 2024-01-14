@@ -8,6 +8,7 @@ from django.forms import model_to_dict
 from config import settings
 from core.pos.choices import genders
 
+
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     desc = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
@@ -42,6 +43,7 @@ class Product(models.Model):
         item['category'] = self.category.toJSON()
         item['image'] = self.get_image()
         item['pvp'] = f'{self.pvp:.2f}'
+        item['atributos'] = [i.toJSON() for i in self.atributos_set.all()]
         return item
 
     def get_image(self):
@@ -52,6 +54,22 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
+        ordering = ['id']
+
+
+class Atributos(models.Model):
+    producto = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Producto')
+    atributo = models.CharField(max_length=150, verbose_name='Atributo')
+    costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, verbose_name='Costo')
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['costo'] = f'{self.costo:.2f}'
+        return item
+
+    class Meta:
+        verbose_name = 'Atributo'
+        verbose_name_plural = 'Atributos'
         ordering = ['id']
 
 
@@ -153,7 +171,8 @@ class Sale(models.Model):
         super(Sale, self).delete()
 
     def calculate_invoice(self):
-        subtotal = self.saleproduct_set.all().aggregate(result=Coalesce(Sum(F('price') * F('cant')), 0.00, output_field=FloatField())).get('result')
+        subtotal = self.saleproduct_set.all().aggregate(
+            result=Coalesce(Sum(F('price') * F('cant')), 0.00, output_field=FloatField())).get('result')
         self.subtotal = subtotal
         self.total_iva = self.subtotal * float(self.iva)
         self.total = float(self.subtotal) + float(self.total_iva)
