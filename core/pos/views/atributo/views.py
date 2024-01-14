@@ -28,7 +28,6 @@ class AtributosListView(ValidatePermissionRequiredMixin, ListView):
                         'costo': atributo.costo,
                     }
                     data.append(i)
-                print(i)
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
