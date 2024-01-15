@@ -9,16 +9,26 @@ var sale = {
         total: 0.00,
         products: []
     },
+    calculoAtributos: function(atributos) {
+        var sumaCosto = 0;
+
+        $.each(atributos, function(key, value) {
+            sumaCosto += parseFloat(value.costo);
+        });
+
+        return sumaCosto;
+    },
     getProductsIds: function () {
         return this.details.products.map(value => value.id);
     },
     calculateInvoice: function () {
         var subtotal = 0.00;
         var iva = $('input[name="iva"]').val();
+            var sumaCosto = 0.00;
         this.details.products.forEach(function (value, index, array) {
             value.index = index;
             value.cant = parseInt(value.cant);
-            value.subtotal = value.cant * parseFloat(value.pvp);
+            value.subtotal = value.cant * sale.calculoAtributos(value.atributos);
             subtotal += value.subtotal;
         });
 
@@ -245,17 +255,12 @@ $(function () {
     })
         .on('select2:select', function (e) {
             var data = e.params.data;
-            var sumaCosto = 0.00
-            $.each(data.atributos, function(key, value) {
-              sumaCosto += parseFloat(value.costo);
-            });
-            console.log(sumaCosto);
             if (!Number.isInteger(data.id)) {
                 return false;
             }
             data.cant = 1;
             data.subtotal = 0.00;
-            data.precio = sumaCosto;
+            data.precio = sale.calculoAtributos(data.atributos);
             sale.addProduct(data);
             select_search_product.val('').trigger('change.select2');
         });
