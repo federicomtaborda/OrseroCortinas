@@ -187,9 +187,9 @@ class Sale(models.Model):
 class SaleProduct(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     cant = models.IntegerField(default=0)
-    subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    subtotal = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.product.name

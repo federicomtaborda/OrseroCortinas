@@ -1,7 +1,7 @@
 var tblProducts;
 var select_client, select_search_product;
 var tblSearchProducts;
-
+var row_products;
 var sale = {
     details: {
         subtotal: 0.00,
@@ -44,8 +44,7 @@ var sale = {
             columns: [
                 {"data": "id"},
                 {"data": "full_name"},
-                {"data": "stock"},
-                {"data": "pvp"},
+                {"data": "precio"},
                 {"data": "cant"},
                 {"data": "subtotal"},
             ],
@@ -53,19 +52,16 @@ var sale = {
                 {
                     targets: [-4],
                     class: 'text-center',
-                    render: function (data, type, row) {
-                        if (!row.is_inventoried) {
-                            return '<span class="badge badge-secondary">Sin stock</span>';
-                        }
-                        return '<span class="badge badge-secondary">' + data + '</span>';
-                    }
                 },
                 {
                     targets: [0],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="fas fa-trash-alt"></i></a>';
+                        return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;">' +
+                               '<i class="fas fa-trash-alt"></i></a> ' +
+                               '<a rel="atributo" class="btn btn-secondary btn-xs btn-flat" style="color: white;">' +
+                               '<i class="fas fa-list"></i></a>';
                     }
                 },
                 {
@@ -107,6 +103,23 @@ var sale = {
             }
         });
     },
+    formatAtributoRowHtml: function (d) {
+        var html = '<table class="table">';
+        html += '<thead class="thead-dark">';
+        html += '<tr><th scope="col">Atributo del Producto</th>';
+        html += '<th scope="col">Costo</th>';
+        html += '</thead>';
+        html += '<tbody>';
+        $.each(d.atributos, function (key, value) {
+            html += '<tr>'
+            html += '<td>' + value.atributo + '</td>'
+            html += '<td>$' + value.costo + '</td>'
+            html += '</tr>';
+    });
+        html += '</tbody>';
+        return html;
+    },
+
 };
 
 $(function () {
@@ -177,37 +190,6 @@ $(function () {
             });
     });
 
-    // Products
-    /*select_search_product.autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: pathname,
-                type: 'POST',
-                data: {
-                    'action': 'search_products',
-                    'term': request.term
-                },
-                dataType: 'json',
-            }).done(function (data) {
-                response(data);
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                //alert(textStatus + ': ' + errorThrown);
-            }).always(function (data) {
-
-            });
-        },
-        delay: 500,
-        minLength: 1,
-        select: function (event, ui) {
-            event.preventDefault();
-            console.clear();
-            ui.item.cant = 1;
-            ui.item.subtotal = 0.00;
-            sale.addProduct(ui.item);
-            $(this).val('');
-        }
-    });*/
-
     select_search_product.select2({
         theme: "bootstrap4",
         language: 'es',
@@ -235,6 +217,7 @@ $(function () {
         placeholder: 'Ingrese una descripción',
         minimumInputLength: 1,
         templateResult: function (repo) {
+
             if (repo.loading) {
                 return repo.text;
             }
@@ -242,8 +225,6 @@ $(function () {
             if (!Number.isInteger(repo.id)) {
                 return repo.text;
             }
-
-            var stock = repo.is_inventoried ? repo.stock : 'Sin stock';
 
             return $(
                 '<div class="wrapper container">' +
@@ -255,8 +236,7 @@ $(function () {
                 //'<br>' +
                 '<p style="margin-bottom: 0;">' +
                 '<b>Nombre:</b> ' + repo.full_name + '<br>' +
-                '<b>Stock:</b> ' + stock + '<br>' +
-                '<b>PVP:</b> <span class="badge badge-warning">$' + repo.pvp + '</span>' +
+                // '<b>Costo Atributos:</b> <span class="badge badge-warning">$' + repo.pvp + '</span>' +
                 '</p>' +
                 '</div>' +
                 '</div>' +
@@ -265,11 +245,17 @@ $(function () {
     })
         .on('select2:select', function (e) {
             var data = e.params.data;
+            var sumaCosto = 0.00
+            $.each(data.atributos, function(key, value) {
+              sumaCosto += parseFloat(value.costo);
+            });
+            console.log(sumaCosto);
             if (!Number.isInteger(data.id)) {
                 return false;
             }
             data.cant = 1;
             data.subtotal = 0.00;
+            data.precio = sumaCosto;
             sale.addProduct(data);
             select_search_product.val('').trigger('change.select2');
         });
@@ -294,6 +280,20 @@ $(function () {
             sale.details.products[tr.row].cant = cant;
             sale.calculateInvoice();
             $('td:last', tblProducts.row(tr.row).node()).html('$' + sale.details.products[tr.row].subtotal.toFixed(2));
+        })
+        .on('click', 'a[rel="atributo"]', function () {
+            var tr = $(this).closest('tr');
+            var row = tblProducts.row(tr);
+            row_products = row[0][0];
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                row.child(sale.formatAtributoRowHtml(row.data())).show();
+                tr.addClass('shown');
+            }
+
         });
 
     $('.btnRemoveAll').on('click', function () {

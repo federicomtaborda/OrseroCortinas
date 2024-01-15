@@ -1,12 +1,13 @@
 {% extends 'login/base.html' %}
-{% load widget_tweaks %}
+{% load widget_tweaks static %}
 {% block content %}
     <div class="login-box">
-        <div class="login-logo">
-            <a href="{% url 'index' %}"><b>A</b>polo</a>
-        </div>
         <div class="card">
             <div class="card-body login-card-body">
+                <img src="{% static 'img/logo-oc.jpeg' %}"
+                 alt="AdminLTE Logo"
+                 class="brand-image img-circle"
+                 style="display: block; margin: 0 auto; width: 155px;">
                 <p class="login-box-msg">Inicie sesión con sus credenciales</p>
                 <form action="." method="post">
                     <input type="hidden" name="next" value="{{ next }}">
@@ -35,9 +36,9 @@
                             </button>
                         </div>
                     </div>
-                    <p class="text-center mt-2" style="font-size: 13px;">
-                        Si no recuerdas tu contraseña puedes resetearla dando click <a href="{% url 'reset_password' %}">aqui </a>
-                    </p>
+{#                    <p class="text-center mt-2" style="font-size: 13px;">#}
+{#                        Si no recuerdas tu contraseña puedes resetearla dando click <a href="{% url 'reset_password' %}">aqui </a>#}
+{#                    </p>#}
                 </form>
             </div>
         </div>
