@@ -33,7 +33,7 @@ var sale = {
         });
 
         this.details.subtotal = subtotal;
-        this.details.iva = this.details.subtotal * iva;
+        this.details.iva = this.details.subtotal * iva / 100;
         this.details.total = this.details.subtotal + this.details.iva;
 
         $('input[name="subtotal"]').val(this.details.subtotal.toFixed(2));

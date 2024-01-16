@@ -80,34 +80,38 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                     data.append(item)
             elif action == 'search_products_select2':
                 data = []
-                ids_exclude = json.loads(request.POST['ids'])
+                # ids_exclude = json.loads(request.POST['ids'])
                 term = request.POST['term'].strip()
                 data.append({'id': term, 'text': term})
-                products = Product.objects.filter(name__icontains=term).filter(Q(stock__gt=0) | Q(is_inventoried=False))
-                for i in products.exclude(id__in=ids_exclude)[0:10]:
+                for i in Product.objects.filter(name__icontains=term)[0:10]:
                     item = i.toJSON()
                     item['text'] = i.__str__()
                     data.append(item)
             elif action == 'add':
-                with transaction.atomic():
-                    products = json.loads(request.POST['products'])
+                with (transaction.atomic()):
+                    subtotal = 0
                     sale = Sale()
                     sale.date_joined = request.POST['date_joined']
                     sale.client_id = int(request.POST['client'])
                     sale.iva = float(request.POST['iva'])
                     sale.save()
+                    products = json.loads(request.POST['products'])
                     for i in products:
+                        costos = 0
+                        for a in i['atributos']:
+                            costos += float(a['costo']);
                         detail = SaleProduct()
                         detail.sale_id = sale.id
                         detail.product_id = int(i['id'])
                         detail.cant = int(i['cant'])
-                        detail.price = float(i['pvp'])
-                        detail.subtotal = detail.cant * detail.price
+                        detail.price = costos
+                        detail.subtotal = detail.cant * costos
                         detail.save()
-                        if detail.product.is_inventoried:
-                            detail.product.stock -= detail.cant
-                            detail.product.save()
-                    sale.calculate_invoice()
+                        subtotal += detail.subtotal
+                    sale.subtotal = subtotal
+                    sale.total_iva = subtotal * float(request.POST['iva']) / 100
+                    sale.total = sale.subtotal + sale.total_iva
+                    sale.save()
                     data = {'id': sale.id}
             elif action == 'search_client':
                 data = []

@@ -76,7 +76,7 @@ var sale = {
         html += '<thead class="thead-dark">';
         html += '<tr><th scope="col">Producto</th>';
         html += '<th scope="col">Categoría</th>';
-        html += '<th scope="col">PVP</th>';
+        html += '<th scope="col">Costo Atributos</th>';
         html += '<th scope="col">Cantidad</th>';
         html += '<th scope="col">Subtotal</th></tr>';
         html += '</thead>';
@@ -85,9 +85,9 @@ var sale = {
             html += '<tr>'
             html += '<td>' + value.product.name + '</td>'
             html += '<td>' + value.product.category.name + '</td>'
-            html += '<td>' + value.price + '</td>'
+            html += '<td>$' + value.price + '</td>'
             html += '<td>' + value.cant + '</td>'
-            html += '<td>' + value.subtotal + '</td>'
+            html += '<td>$' + value.subtotal + '</td>'
             html += '</tr>';
         });
         html += '</tbody>';
