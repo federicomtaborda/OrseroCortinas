@@ -138,6 +138,7 @@ class Sale(models.Model):
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total_iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    descripcion = models.CharField(max_length=250, verbose_name='Descripcion', blank=True)
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
 
     def __str__(self):
@@ -164,20 +165,6 @@ class Sale(models.Model):
         item['saleproduct'] = [i.toJSON() for i in self.saleproduct_set.all()]
         return item
 
-    def delete(self, using=None, keep_parents=False):
-        for detail in self.saleproduct_set.filter(product__is_inventoried=True):
-            detail.product.stock += detail.cant
-            detail.product.save()
-        super(Sale, self).delete()
-
-    def calculate_invoice(self):
-        subtotal = self.saleproduct_set.all().aggregate(
-            result=Coalesce(Sum(F('price') * F('cant')), 0.00, output_field=FloatField())).get('result')
-        self.subtotal = subtotal
-        self.total_iva = self.subtotal * float(self.iva)
-        self.total = float(self.subtotal) + float(self.total_iva)
-        self.save()
-
     class Meta:
         verbose_name = 'Venta'
         verbose_name_plural = 'Ventas'
@@ -187,9 +174,9 @@ class Sale(models.Model):
 class SaleProduct(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     cant = models.IntegerField(default=0)
-    subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    subtotal = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.product.name
