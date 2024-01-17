@@ -2,6 +2,7 @@ var tblProducts;
 var select_client, select_search_product;
 var tblSearchProducts;
 var row_products;
+
 var sale = {
     details: {
         subtotal: 0.00,
@@ -125,8 +126,13 @@ var sale = {
             html += '<td>' + value.atributo + '</td>'
             html += '<td>$' + value.costo + '</td>'
             html += '</tr>';
-    });
+        });
         html += '</tbody>';
+        html +='<div class="form-group">'
+        html +='<label for="">Observaciones:</label>'
+        html +='<textarea class="form-control" rows="3" name="observaciones" placeholder="ej: Medidas 2mts x 1.60mts">'
+        html +='</textarea>';
+        html +='</div>'
         return html;
     },
 
@@ -286,11 +292,15 @@ $(function () {
             sale.calculateInvoice();
             $('td:last', tblProducts.row(tr.row).node()).html('$' + sale.details.products[tr.row].subtotal.toFixed(2));
         })
+        .on('change', 'textarea[name="observaciones"]', function () {
+            console.clear();
+            var obs = $(this).val();
+            sale.details.products[row_products].observaciones = obs;
+        })
         .on('click', 'a[rel="atributo"]', function () {
             var tr = $(this).closest('tr');
             var row = tblProducts.row(tr);
             row_products = row[0][0];
-
             if (row.child.isShown()) {
                 row.child.hide();
                 tr.removeClass('shown');
@@ -416,7 +426,7 @@ $(function () {
         postfix: '%'
     }).on('change', function () {
         sale.calculateInvoice();
-    }).val(0.12);
+    }).val(21);
 
     $('#frmSale').on('submit', function (e) {
         e.preventDefault();
@@ -440,7 +450,6 @@ $(function () {
                 // });
             });
     });
-
     sale.listProducts();
 });
 

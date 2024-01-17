@@ -151,7 +151,6 @@ class Sale(models.Model):
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total_iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
-    descripcion = models.CharField(max_length=250, verbose_name='Descripcion')
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     estado = models.CharField(u'Estado Venta', max_length=60, choices=ESTADO_VENTA,
                               default=EstadoVenta.presupuestada)
@@ -192,6 +191,7 @@ class SaleProduct(models.Model):
     price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     cant = models.IntegerField(default=0)
     subtotal = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    observaciones = models.TextField(max_length=250, verbose_name='Observaciones', blank=True, null=True)
 
     def __str__(self):
         return self.product.name

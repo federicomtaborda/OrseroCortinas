@@ -106,6 +106,7 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                         detail.cant = int(i['cant'])
                         detail.price = costos
                         detail.subtotal = detail.cant * costos
+                        detail.observaciones = str(i['observaciones'])
                         detail.save()
                         subtotal += detail.subtotal
                     sale.subtotal = subtotal
