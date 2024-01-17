@@ -2,6 +2,7 @@ var tblProducts;
 var select_client, select_search_product;
 var tblSearchProducts;
 var row_products;
+
 var sale = {
     details: {
         subtotal: 0.00,
@@ -24,11 +25,11 @@ var sale = {
     calculateInvoice: function () {
         var subtotal = 0.00;
         var iva = $('input[name="iva"]').val();
-            var sumaCosto = 0.00;
         this.details.products.forEach(function (value, index, array) {
             value.index = index;
             value.cant = parseInt(value.cant);
-            value.subtotal = value.cant * sale.calculoAtributos(value.atributos);
+            value.precio = sale.calculoAtributos(value.atributos);
+            value.subtotal = value.cant * value.precio;
             subtotal += value.subtotal;
         });
 
@@ -121,12 +122,19 @@ var sale = {
         html += '</thead>';
         html += '<tbody>';
         $.each(d.atributos, function (key, value) {
-            html += '<tr>'
-            html += '<td>' + value.atributo + '</td>'
-            html += '<td>$' + value.costo + '</td>'
+            html += '<tr>';
+            html += '<td>' + value.atributo + '</td>';
+            html += '<td>$' + value.costo + '</td>';
             html += '</tr>';
-    });
-        html += '</tbody>';
+        });
+        html += '<div class="form-group">';
+        html += '<textarea class="form-control" rows="3" name="observaciones" placeholder="ej: Medidas 2mts x 1.60mts">';
+        // Verificar si d.observaciones está definido antes de concatenarlo
+        if (typeof d.observaciones !== 'undefined' && d.observaciones !== null) {
+            html += d.observaciones;
+        }
+        html += '</textarea>';
+        html += '</div>';
         return html;
     },
 
@@ -286,11 +294,15 @@ $(function () {
             sale.calculateInvoice();
             $('td:last', tblProducts.row(tr.row).node()).html('$' + sale.details.products[tr.row].subtotal.toFixed(2));
         })
+        .on('change', 'textarea[name="observaciones"]', function () {
+            console.clear();
+            var obs = $(this).val();
+            sale.details.products[row_products].observaciones = obs;
+        })
         .on('click', 'a[rel="atributo"]', function () {
             var tr = $(this).closest('tr');
             var row = tblProducts.row(tr);
-            row_products = row[0][0];
-
+            row_products = row[0];
             if (row.child.isShown()) {
                 row.child.hide();
                 tr.removeClass('shown');
@@ -416,7 +428,7 @@ $(function () {
         postfix: '%'
     }).on('change', function () {
         sale.calculateInvoice();
-    }).val(0.12);
+    }).val(21);
 
     $('#frmSale').on('submit', function (e) {
         e.preventDefault();
@@ -431,15 +443,15 @@ $(function () {
         parameters.append('products', JSON.stringify(sale.details.products));
         submit_with_ajax(pathname, 'Notificación',
             '¿Estas seguro de realizar la siguiente acción?', parameters, function (response) {
-                alert_action('Notificación', '¿Desea imprimir la boleta de venta?', function () {
-                    window.open('/pos/sale/invoice/pdf/' + response.id + '/', '_blank');
-                    location.href = success_url;
-                }, function () {
-                    location.href = success_url;
-                });
+            location.href = success_url;
+                // alert_action('Notificación', '¿Desea imprimir la boleta de venta?', function () {
+                //     window.open('/pos/sale/invoice/pdf/' + response.id + '/', '_blank');
+                //     location.href = success_url;
+                // }, function () {
+                //     location.href = success_url;
+                // });
             });
     });
-
     sale.listProducts();
 });
 

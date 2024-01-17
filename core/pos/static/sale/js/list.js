@@ -35,6 +35,7 @@ var sale = {
                 {"data": "iva"},
                 {"data": "total_iva"},
                 {"data": "total"},
+                {"data": "estado"},
                 {"data": "id"},
             ],
             order: [[0, "desc"], [2, "desc"]],
@@ -47,7 +48,7 @@ var sale = {
                     }
                 },
                 {
-                    targets: [-2, -3, -4, -5],
+                    targets: [-3, -4, -5, -6],
                     class: 'text-center',
                     render: function (data, type, row) {
                         return '$' + parseFloat(data).toFixed(2);
@@ -65,6 +66,13 @@ var sale = {
                         return buttons;
                     }
                 },
+                {
+                    targets: [-2, -7],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
             ],
             initComplete: function (settings, json) {
 
@@ -78,16 +86,21 @@ var sale = {
         html += '<th scope="col">Categoría</th>';
         html += '<th scope="col">Costo Atributos</th>';
         html += '<th scope="col">Cantidad</th>';
-        html += '<th scope="col">Subtotal</th></tr>';
+        html += '<th scope="col">Subtotal</th>';
         html += '</thead>';
         html += '<tbody>';
         $.each(d.saleproduct, function (key, value) {
             html += '<tr>'
             html += '<td>' + value.product.name + '</td>'
             html += '<td>' + value.product.category.name + '</td>'
-            html += '<td>$' + value.price + '</td>'
-            html += '<td>' + value.cant + '</td>'
-            html += '<td>$' + value.subtotal + '</td>'
+            html += '<td>$' + value.price + '</td>';
+            html += '<td>' + value.cant + '</td>';
+            html += '<td>$' + value.subtotal + '</td>';
+            html += '<tr>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td colspan="6">Observaciones: <i>' + value.observaciones + '</i></td>';
+            html += '<tr style="height: 1px;"><td colspan="6"></td></tr>';
             html += '</tr>';
         });
         html += '</tbody>';
