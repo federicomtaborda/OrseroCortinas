@@ -164,6 +164,7 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
         for i in sale.saleproduct_set.all():
             item = i.product.toJSON()
             item['cant'] = i.cant
+            item['observaciones'] = i.observaciones
             data.append(item)
         return json.dumps(data)
 
@@ -213,6 +214,7 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                             detail.cant = int(i['cant'])
                             detail.price = costos
                             detail.subtotal = detail.cant * costos
+                            detail.observaciones = str(i['observaciones'])
                             detail.save()
                             subtotal += detail.subtotal
                         sale.subtotal = subtotal

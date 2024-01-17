@@ -86,16 +86,21 @@ var sale = {
         html += '<th scope="col">Categoría</th>';
         html += '<th scope="col">Costo Atributos</th>';
         html += '<th scope="col">Cantidad</th>';
-        html += '<th scope="col">Subtotal</th></tr>';
+        html += '<th scope="col">Subtotal</th>';
         html += '</thead>';
         html += '<tbody>';
         $.each(d.saleproduct, function (key, value) {
             html += '<tr>'
             html += '<td>' + value.product.name + '</td>'
             html += '<td>' + value.product.category.name + '</td>'
-            html += '<td>$' + value.price + '</td>'
-            html += '<td>' + value.cant + '</td>'
-            html += '<td>$' + value.subtotal + '</td>'
+            html += '<td>$' + value.price + '</td>';
+            html += '<td>' + value.cant + '</td>';
+            html += '<td>$' + value.subtotal + '</td>';
+            html += '<tr>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td colspan="6">Observaciones: <i>' + value.observaciones + '</i></td>';
+            html += '<tr style="height: 1px;"><td colspan="6"></td></tr>';
             html += '</tr>';
         });
         html += '</tbody>';

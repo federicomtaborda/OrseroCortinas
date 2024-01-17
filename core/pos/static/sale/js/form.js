@@ -122,17 +122,19 @@ var sale = {
         html += '</thead>';
         html += '<tbody>';
         $.each(d.atributos, function (key, value) {
-            html += '<tr>'
-            html += '<td>' + value.atributo + '</td>'
-            html += '<td>$' + value.costo + '</td>'
+            html += '<tr>';
+            html += '<td>' + value.atributo + '</td>';
+            html += '<td>$' + value.costo + '</td>';
             html += '</tr>';
         });
-        html += '</tbody>';
-        html +='<div class="form-group">'
-        html +='<label for="">Observaciones:</label>'
-        html +='<textarea class="form-control" rows="3" name="observaciones" placeholder="ej: Medidas 2mts x 1.60mts">'
-        html +='</textarea>';
-        html +='</div>'
+        html += '<div class="form-group">';
+        html += '<textarea class="form-control" rows="3" name="observaciones" placeholder="ej: Medidas 2mts x 1.60mts">';
+        // Verificar si d.observaciones está definido antes de concatenarlo
+        if (typeof d.observaciones !== 'undefined' && d.observaciones !== null) {
+            html += d.observaciones;
+        }
+        html += '</textarea>';
+        html += '</div>';
         return html;
     },
 
@@ -300,7 +302,7 @@ $(function () {
         .on('click', 'a[rel="atributo"]', function () {
             var tr = $(this).closest('tr');
             var row = tblProducts.row(tr);
-            row_products = row[0][0];
+            row_products = row[0];
             if (row.child.isShown()) {
                 row.child.hide();
                 tr.removeClass('shown');
