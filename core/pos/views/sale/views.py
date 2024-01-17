@@ -193,6 +193,7 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                     data.append(item)
             elif action == 'edit':
                 with transaction.atomic():
+                    subtotal = 0
                     with transaction.atomic():
                         products = json.loads(request.POST['products'])
                         sale = self.get_object()
@@ -202,17 +203,21 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                         sale.save()
                         sale.saleproduct_set.all().delete()
                         for i in products:
+                            costos = 0
+                            for a in i['atributos']:
+                                costos += float(a['costo']);
                             detail = SaleProduct()
                             detail.sale_id = sale.id
                             detail.product_id = int(i['id'])
                             detail.cant = int(i['cant'])
-                            detail.price = float(i['pvp'])
-                            detail.subtotal = detail.cant * detail.price
+                            detail.price = costos
+                            detail.subtotal = detail.cant * costos
                             detail.save()
-                            if detail.product.is_inventoried:
-                                detail.product.stock -= detail.cant
-                                detail.product.save()
-                        sale.calculate_invoice()
+                            subtotal += detail.subtotal
+                        sale.subtotal = subtotal
+                        sale.total_iva = subtotal * float(request.POST['iva']) / 100
+                        sale.total = sale.subtotal + sale.total_iva
+                        sale.save()
                         data = {'id': sale.id}
                     data = {'id': sale.id}
             elif action == 'search_client':

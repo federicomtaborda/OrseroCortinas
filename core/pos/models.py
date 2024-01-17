@@ -9,6 +9,19 @@ from config import settings
 from core.pos.choices import genders
 
 
+class EstadoVenta:
+    presupuestada = 'Presupuestada'
+    pendiente_colocacion = 'Preciente de Colocacion'
+    terminada = 'Colocacion Terminada'
+
+
+ESTADO_VENTA = (
+    (EstadoVenta.presupuestada, "Presupuestada"),
+    (EstadoVenta.pendiente_colocacion, "Preciente de Colocación"),
+    (EstadoVenta.terminada, "Colocación Terminada"),
+    )
+
+
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     desc = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
@@ -138,8 +151,10 @@ class Sale(models.Model):
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total_iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
-    descripcion = models.CharField(max_length=250, verbose_name='Descripcion', blank=True)
+    descripcion = models.CharField(max_length=250, verbose_name='Descripcion')
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    estado = models.CharField(u'Estado Venta', max_length=60, choices=ESTADO_VENTA,
+                              default=EstadoVenta.presupuestada)
 
     def __str__(self):
         return self.client.names

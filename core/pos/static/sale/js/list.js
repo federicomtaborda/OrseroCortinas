@@ -35,6 +35,7 @@ var sale = {
                 {"data": "iva"},
                 {"data": "total_iva"},
                 {"data": "total"},
+                {"data": "estado"},
                 {"data": "id"},
             ],
             order: [[0, "desc"], [2, "desc"]],
@@ -47,7 +48,7 @@ var sale = {
                     }
                 },
                 {
-                    targets: [-2, -3, -4, -5],
+                    targets: [-3, -4, -5, -6],
                     class: 'text-center',
                     render: function (data, type, row) {
                         return '$' + parseFloat(data).toFixed(2);
@@ -63,6 +64,13 @@ var sale = {
                         buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';
                         buttons += '<a href="' + pathname + 'invoice/pdf/' + row.id + '/" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fas fa-file-pdf"></i></a> ';
                         return buttons;
+                    }
+                },
+                {
+                    targets: [-2, -7],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '<p>' + data + '</p>';
                     }
                 },
             ],

@@ -24,11 +24,11 @@ var sale = {
     calculateInvoice: function () {
         var subtotal = 0.00;
         var iva = $('input[name="iva"]').val();
-            var sumaCosto = 0.00;
         this.details.products.forEach(function (value, index, array) {
             value.index = index;
             value.cant = parseInt(value.cant);
-            value.subtotal = value.cant * sale.calculoAtributos(value.atributos);
+            value.precio = sale.calculoAtributos(value.atributos);
+            value.subtotal = value.cant * value.precio;
             subtotal += value.subtotal;
         });
 
@@ -431,12 +431,13 @@ $(function () {
         parameters.append('products', JSON.stringify(sale.details.products));
         submit_with_ajax(pathname, 'Notificación',
             '¿Estas seguro de realizar la siguiente acción?', parameters, function (response) {
-                alert_action('Notificación', '¿Desea imprimir la boleta de venta?', function () {
-                    window.open('/pos/sale/invoice/pdf/' + response.id + '/', '_blank');
-                    location.href = success_url;
-                }, function () {
-                    location.href = success_url;
-                });
+            location.href = success_url;
+                // alert_action('Notificación', '¿Desea imprimir la boleta de venta?', function () {
+                //     window.open('/pos/sale/invoice/pdf/' + response.id + '/', '_blank');
+                //     location.href = success_url;
+                // }, function () {
+                //     location.href = success_url;
+                // });
             });
     });
 
