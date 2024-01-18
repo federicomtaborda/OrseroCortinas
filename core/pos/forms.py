@@ -100,21 +100,13 @@ class ClientForm(ModelForm):
         fields = '__all__'
         widgets = {
             'names': forms.TextInput(attrs={'placeholder': 'Ingrese un nombre'}),
-            'dni': forms.TextInput(attrs={'placeholder': 'Ingrese un número de cedula'}),
-            'birthdate': forms.DateInput(format='%Y-%m-%d', attrs={
-                'class': 'form-control datetimepicker-input',
-                'id': 'birthdate',
-                'value': datetime.now().strftime('%Y-%m-%d'),
-                'data-toggle': 'datetimepicker',
-                'data-target': '#birthdate'
-            }),
             'address': forms.TextInput(attrs={
                 'placeholder': 'Ingrese una dirección',
             }),
-            'gender': forms.Select(attrs={
-                'class': 'select2',
-                'style': 'width: 100%'
-            })
+            # 'gender': forms.Select(attrs={
+            #     'class': 'select2',
+            #     'style': 'width: 100%'
+            # })
         }
 
     def save(self, commit=True):
