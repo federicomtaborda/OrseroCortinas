@@ -19,9 +19,9 @@ var client = {
             columns: [
                 {"data": "id"},
                 {"data": "names"},
-                {"data": "dni"},
-                {"data": "birthdate"},
-                {"data": "gender.name"},
+                {"data": "address"},
+                {"data": "telefono"},
+                {"data": "contacto"},
                 {"data": "id"},
             ],
             columnDefs: [

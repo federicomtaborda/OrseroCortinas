@@ -43,9 +43,6 @@ class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoría')
     image = models.ImageField(upload_to='product/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen')
-    is_inventoried = models.BooleanField(default=True, verbose_name='¿Es inventariado?')
-    stock = models.IntegerField(default=0, verbose_name='Stock')
-    pvp = models.DecimalField(default=0.00, max_digits=9, decimal_places=2, verbose_name='Precio de venta')
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
@@ -55,7 +52,6 @@ class Product(models.Model):
         item['full_name'] = self.__str__()
         item['category'] = self.category.toJSON()
         item['image'] = self.get_image()
-        item['pvp'] = f'{self.pvp:.2f}'
         item['atributos'] = [i.toJSON() for i in self.atributos_set.all()]
         return item
 
@@ -88,10 +84,9 @@ class Atributos(models.Model):
 
 class Client(models.Model):
     names = models.CharField(max_length=150, verbose_name='Nombres')
-    dni = models.CharField(max_length=10, unique=True, verbose_name='Número de cedula')
-    birthdate = models.DateField(default=datetime.now, verbose_name='Fecha de nacimiento')
     address = models.CharField(max_length=150, null=True, blank=True, verbose_name='Dirección')
-    gender = models.CharField(max_length=10, choices=genders, default='male', verbose_name='Genero')
+    telefono = models.CharField(max_length=25, null=True, blank=True, verbose_name='Telefono')
+    contacto = models.CharField(max_length=25, null=True, blank=True, verbose_name='Contacto')
 
     def __str__(self):
         return self.get_full_name()
@@ -101,8 +96,6 @@ class Client(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['gender'] = {'id': self.gender, 'name': self.get_gender_display()}
-        item['birthdate'] = self.birthdate.strftime('%Y-%m-%d')
         item['full_name'] = self.get_full_name()
         return item
 
@@ -114,11 +107,9 @@ class Client(models.Model):
 
 class Company(models.Model):
     name = models.CharField(max_length=150, verbose_name='Razón Social')
-    ruc = models.CharField(max_length=13, verbose_name='Ruc')
     address = models.CharField(max_length=150, null=True, blank=True, verbose_name='Dirección')
     mobile = models.CharField(max_length=10, verbose_name='Teléfono Celular')
-    phone = models.CharField(max_length=7, verbose_name='Teléfono Convencional')
-    website = models.CharField(max_length=150, verbose_name='Website')
+    phone = models.CharField(max_length=7, verbose_name='Teléfono Alternativo', blank=True, null=True)
     image = models.ImageField(upload_to='company/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen')
 
     def __str__(self):
