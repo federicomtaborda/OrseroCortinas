@@ -20,6 +20,7 @@ class ClientListView(ValidatePermissionRequiredMixin, ListView):
                 data = []
                 for i in Client.objects.all():
                     data.append(i.toJSON())
+                    print(data)
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

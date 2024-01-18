@@ -106,7 +106,9 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                         detail.cant = int(i['cant'])
                         detail.price = costos
                         detail.subtotal = detail.cant * costos
-                        detail.observaciones = str(i['observaciones'])
+                        detail.observaciones = i.get('observaciones', None)
+                        if detail.observaciones is not None:
+                            detail.observaciones = str(detail.observaciones)
                         detail.save()
                         subtotal += detail.subtotal
                     sale.subtotal = subtotal
@@ -117,8 +119,7 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
             elif action == 'search_client':
                 data = []
                 term = request.POST['term']
-                clients = Client.objects.filter(
-                    Q(names__icontains=term) | Q(dni__icontains=term))[0:10]
+                clients = Client.objects.filter(names__icontains=term)[0:10]
                 for i in clients:
                     item = i.toJSON()
                     item['text'] = i.get_full_name()

@@ -132,6 +132,9 @@ var sale = {
         // Verificar si d.observaciones está definido antes de concatenarlo
         if (typeof d.observaciones !== 'undefined' && d.observaciones !== null) {
             html += d.observaciones;
+        }else
+        {
+            html += '';
         }
         html += '</textarea>';
         html += '</div>';
@@ -252,9 +255,8 @@ $(function () {
                 '</div>' +
                 '<div class="col-lg-11 text-left shadow-sm">' +
                 //'<br>' +
-                '<p style="margin-bottom: 0;">' +
+                '<p class="m-2">' +
                 '<b>Nombre:</b> ' + repo.full_name + '<br>' +
-                // '<b>Costo Atributos:</b> <span class="badge badge-warning">$' + repo.pvp + '</span>' +
                 '</p>' +
                 '</div>' +
                 '</div>' +

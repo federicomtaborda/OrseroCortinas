@@ -92,7 +92,7 @@ class Client(models.Model):
         return self.get_full_name()
 
     def get_full_name(self):
-        return f'{self.names} ({self.dni})'
+        return f'{self.names}'
 
     def toJSON(self):
         item = model_to_dict(self)

@@ -24,9 +24,9 @@ from core.pos.views.dashboard.views import page_not_found404
 from rest_framework.authtoken import views
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
+    # path('', IndexView.as_view(), name='index'),
+    path('', include('core.login.urls')),
     path('admin/', admin.site.urls),
-    path('login/', include('core.login.urls')),
     path('pos/', include('core.pos.urls')),
     path('reports/', include('core.reports.urls')),
     path('user/', include('core.user.urls')),
