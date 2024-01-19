@@ -162,11 +162,12 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
     def get_details_product(self):
         data = []
         sale = self.get_object()
+        print(sale.saleproduct_set.all())
         for i in sale.saleproduct_set.all():
+            print(i.product.toJSON())
             item = i.product.toJSON()
             item['cant'] = i.cant
             item['observaciones'] = i.observaciones
-            data.append(item)
         return json.dumps(data)
 
     def post(self, request, *args, **kwargs):
@@ -186,11 +187,10 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                     data.append(item)
             elif action == 'search_products_select2':
                 data = []
-                ids_exclude = json.loads(request.POST['ids'])
+                # ids_exclude = json.loads(request.POST['ids'])
                 term = request.POST['term'].strip()
                 data.append({'id': term, 'text': term})
-                products = Product.objects.filter(name__icontains=term).filter(Q(stock__gt=0) | Q(is_inventoried=False))
-                for i in products.exclude(id__in=ids_exclude)[0:10]:
+                for i in Product.objects.filter(name__icontains=term)[0:10]:
                     item = i.toJSON()
                     item['text'] = i.__str__()
                     data.append(item)
