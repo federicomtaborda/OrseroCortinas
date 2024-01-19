@@ -9,6 +9,7 @@ from config import settings
 from core.pos.choices import genders
 
 
+# Estado de Ventas
 class EstadoVenta:
     presupuestada = 'Presupuestada'
     pendiente_colocacion = 'Preciente de Colocacion'
@@ -17,8 +18,24 @@ class EstadoVenta:
 
 ESTADO_VENTA = (
     (EstadoVenta.presupuestada, "Presupuestada"),
-    (EstadoVenta.pendiente_colocacion, "Preciente de Colocación"),
-    (EstadoVenta.terminada, "Colocación Terminada"),
+    (EstadoVenta.pendiente_colocacion, "Costo Transporte"),
+    (EstadoVenta.terminada, "Costo Colocación"),
+    (EstadoVenta.terminada, "Otros Costos"),
+    )
+
+# Descripción de Atributos
+class DescripcionAtributo:
+    costo_proveedor = 'Costo proveedor'
+    costo_transporte = 'Costo transporte'
+    costo_colocacion = 'Costo colocación'
+    otros_costos = 'Otros Costos'
+
+
+DESCRIPCION_ATRIBUTO = (
+    (DescripcionAtributo.costo_proveedor, "Costo proveedor"),
+    (DescripcionAtributo.costo_transporte, "Costo transporte"),
+    (DescripcionAtributo.costo_colocacion, "Costo colocación"),
+    (DescripcionAtributo.otros_costos, "Otros costos"),
     )
 
 
@@ -68,7 +85,7 @@ class Product(models.Model):
 
 class Atributos(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Producto')
-    atributo = models.CharField(max_length=150, verbose_name='Atributo')
+    atributo = models.CharField(u'Atriburo', max_length=60, choices=DESCRIPCION_ATRIBUTO)
     costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, verbose_name='Costo')
 
     def toJSON(self):
@@ -77,6 +94,7 @@ class Atributos(models.Model):
         return item
 
     class Meta:
+        unique_together = ('producto', 'atributo')
         verbose_name = 'Atributo'
         verbose_name_plural = 'Atributos'
         ordering = ['id']

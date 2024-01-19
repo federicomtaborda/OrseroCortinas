@@ -5,20 +5,20 @@ from core.pos.models import *
 
 
 class AtributoForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['atributo'].widget.attrs['autofocus'] = True
-
-    widgets = {
-        'producto': forms.Select(attrs={
-            'class': 'select2',
-            'style': 'width: 100%'
-        }),
-    }
 
     class Meta:
         model = Atributos
         fields = '__all__'
+        widgets = {
+            'producto': forms.Select(attrs={
+                'class': 'select2',
+                'style': 'width: 100%'
+            }),
+            'atributo': forms.Select(attrs={
+                'class': 'select2',
+                'style': 'width: 100%'
+            }),
+        }
 
     def save(self, commit=True):
         data = {}
@@ -103,10 +103,6 @@ class ClientForm(ModelForm):
             'address': forms.TextInput(attrs={
                 'placeholder': 'Ingrese una dirección',
             }),
-            # 'gender': forms.Select(attrs={
-            #     'class': 'select2',
-            #     'style': 'width: 100%'
-            # })
         }
 
     def save(self, commit=True):

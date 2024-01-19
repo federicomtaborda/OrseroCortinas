@@ -23,12 +23,17 @@
         <br>
     </div>
     <script type="application/javascript">
+    
+        var fechaActual = new Date();
+        
+        var añoActual = fechaActual.getFullYear();
+
         var graphcolumn = Highcharts.chart('container', {
             chart: {
                 type: 'column'
             },
             title: {
-                text: 'Reporte de ventas del año 2021'
+                text: 'Reporte de ventas del año ' + añoActual
             },
             subtitle: {
                 text: 'Reporte de columnas'
@@ -79,7 +84,7 @@
                 type: 'pie'
             },
             title: {
-                text: 'Porcentaje de venta de productos por el mes de Junio del año 2020'
+                text: 'Porcentaje de venta de productos por el mes de Junio del año ' + añoActual
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'

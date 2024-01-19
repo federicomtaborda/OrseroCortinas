@@ -12,7 +12,6 @@ var sale = {
     },
     calculoAtributos: function(atributos) {
         var sumaCosto = 0;
-
         $.each(atributos, function(key, value) {
             sumaCosto += parseFloat(value.costo);
         });
@@ -104,7 +103,7 @@ var sale = {
 
                 $(row).find('input[name="cant"]').TouchSpin({
                     min: 1,
-                    max: data.is_inventoried ? row.stock : 1000000,
+                    max: 1000000,
                     step: 1
                 });
 
@@ -115,7 +114,7 @@ var sale = {
         });
     },
     formatAtributoRowHtml: function (d) {
-        var html = '<table class="table">';
+        var html = '<table class="table" id="lblAtributos">';
         html += '<thead class="thead-dark">';
         html += '<tr><th scope="col">Atributo del Producto</th>';
         html += '<th scope="col">Costo</th>';
@@ -124,7 +123,8 @@ var sale = {
         $.each(d.atributos, function (key, value) {
             html += '<tr>';
             html += '<td>' + value.atributo + '</td>';
-            html += '<td>$' + value.costo + '</td>';
+            html += '<td><input type="number" name="importe-atributo" class="form-control form-control-sm input-sm" ' +
+                'autocomplete="off" min="0" value="' + value.costo + '"></td>';
             html += '</tr>';
         });
         html += '<div class="form-group">';
@@ -313,6 +313,15 @@ $(function () {
                 tr.addClass('shown');
             }
 
+        })
+        .on('change', 'input[name="importe-atributo"]', function () {
+            var costo = parseFloat($(this).val());
+            var tr = $(this).closest('tr').index();
+            sale.details.products[row_products]['atributos'][tr].costo = costo;
+            sale.calculateInvoice();
+            $('td:last', tblProducts.row(row_products).node()).html('$' + sale.details.products[row_products].subtotal.toFixed(2));
+
+            $('td:eq(2)', tblProducts.row(row_products).node()).html('$' + sale.details.products[row_products].precio.toFixed(2));
         });
 
     $('.btnRemoveAll').on('click', function () {
@@ -423,7 +432,7 @@ $(function () {
     $("input[name='iva']").TouchSpin({
         min: 0,
         max: 100,
-        step: 0.01,
+        step: 1,
         decimals: 2,
         boostat: 5,
         maxboostedstep: 10,
