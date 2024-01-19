@@ -94,6 +94,7 @@ class Atributos(models.Model):
         return item
 
     class Meta:
+        unique_together = ('producto', 'atributo')
         verbose_name = 'Atributo'
         verbose_name_plural = 'Atributos'
         ordering = ['id']
