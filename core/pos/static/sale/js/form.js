@@ -10,12 +10,17 @@ var sale = {
         total: 0.00,
         products: []
     },
-    calculoAtributos: function(atributos) {
+    calculoAtributos: function(atributos = []) {
+        if (!Array.isArray(atributos)) {
+            return 0;
+        }
         var sumaCosto = 0;
-        $.each(atributos, function(key, value) {
-            sumaCosto += parseFloat(value.costo);
-        });
 
+        atributos.forEach(function(value) {
+            if (value && typeof value.precio === 'number') {
+                sumaCosto += value.precio;
+            }
+        });
         return sumaCosto;
     },
     getProductsIds: function () {
@@ -124,7 +129,7 @@ var sale = {
             html += '<tr>';
             html += '<td>' + value.atributo + '</td>';
             html += '<td><input type="number" name="importe-atributo" class="form-control form-control-sm input-sm" ' +
-                'autocomplete="off" min="0" value="' + value.costo + '"></td>';
+                'autocomplete="off" min="0" value="' + (typeof value.precio !== 'undefined' ? value.precio : '0.00') + '"></td>';
             html += '</tr>';
         });
         html += '<div class="form-group">';
@@ -204,7 +209,6 @@ $(function () {
         parameters.append('action', 'create_client');
         submit_with_ajax(pathname, 'Notificación',
             '¿Estas seguro de crear al siguiente cliente?', parameters, function (response) {
-                //console.log(response);
                 var newOption = new Option(response.full_name, response.id, false, true);
                 select_client.append(newOption).trigger('change');
                 $('#myModalClient').modal('hide');
@@ -270,7 +274,7 @@ $(function () {
             }
             data.cant = 1;
             data.subtotal = 0.00;
-            data.precio = sale.calculoAtributos(data.atributos);
+            data.precio = 0.00;
             sale.addProduct(data);
             select_search_product.val('').trigger('change.select2');
         });
@@ -317,7 +321,7 @@ $(function () {
         .on('change', 'input[name="importe-atributo"]', function () {
             var costo = parseFloat($(this).val());
             var tr = $(this).closest('tr').index();
-            sale.details.products[row_products]['atributos'][tr].costo = costo;
+            sale.details.products[row_products]['atributos'][tr].precio = costo;
             sale.calculateInvoice();
             $('td:last', tblProducts.row(row_products).node()).html('$' + sale.details.products[row_products].subtotal.toFixed(2));
 

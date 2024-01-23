@@ -14,7 +14,7 @@ from weasyprint import HTML, CSS
 
 from core.pos.forms import SaleForm, ClientForm
 from core.pos.mixins import ValidatePermissionRequiredMixin, ExistsCompanyMixin
-from core.pos.models import Sale, Product, SaleProduct, Client
+from core.pos.models import Sale, Product, SaleProduct, Client, SaleAtributos
 from core.reports.forms import ReportForm
 
 
@@ -99,7 +99,13 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                     for i in products:
                         costos = 0
                         for a in i['atributos']:
-                            costos += float(a['costo']);
+                            print(a);
+                            atributos = SaleAtributos()
+                            atributos.sale_id = int(sale.id)
+                            atributos.atributo_id = int(a['id'])
+                            atributos.costo = float(a['precio'])
+                            costos += atributos.costo
+                            atributos.save()
                         detail = SaleProduct()
                         detail.sale_id = sale.id
                         detail.product_id = int(i['id'])
@@ -162,12 +168,15 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
     def get_details_product(self):
         data = []
         sale = self.get_object()
-        print(sale.saleproduct_set.all())
         for i in sale.saleproduct_set.all():
-            print(i.product.toJSON())
             item = i.product.toJSON()
             item['cant'] = i.cant
             item['observaciones'] = i.observaciones
+            for a in sale.saleatributos_set.all():
+                for c in item['atributos']:
+                    if c['id'] == a.atributo_id:
+                            c['precio'] = float(a.costo)
+            data.append(item)
         return json.dumps(data)
 
     def post(self, request, *args, **kwargs):
@@ -208,14 +217,22 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                         for i in products:
                             costos = 0
                             for a in i['atributos']:
-                                costos += float(a['costo']);
+                                atributos = SaleAtributos()
+                                atributos.sale_id = int(sale.id)
+                                atributos.atributo_id = int(a['producto'])
+                                atributos.costo = float(a['precio'])
+                                costos += atributos.costo
+                                atributos.save()
+                                print(atributos)
                             detail = SaleProduct()
                             detail.sale_id = sale.id
                             detail.product_id = int(i['id'])
                             detail.cant = int(i['cant'])
                             detail.price = costos
                             detail.subtotal = detail.cant * costos
-                            detail.observaciones = str(i['observaciones'])
+                            detail.observaciones = i.get('observaciones', None)
+                            if detail.observaciones is not None:
+                                detail.observaciones = str(detail.observaciones)
                             detail.save()
                             subtotal += detail.subtotal
                         sale.subtotal = subtotal

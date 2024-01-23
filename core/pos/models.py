@@ -86,11 +86,9 @@ class Product(models.Model):
 class Atributos(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Producto')
     atributo = models.CharField(u'Atriburo', max_length=60, choices=DESCRIPCION_ATRIBUTO)
-    costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, verbose_name='Costo')
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['costo'] = f'{self.costo:.2f}'
         return item
 
     class Meta:
@@ -186,6 +184,7 @@ class Sale(models.Model):
         item['total'] = f'{self.total:.2f}'
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['saleproduct'] = [i.toJSON() for i in self.saleproduct_set.all()]
+        item['saleatributos'] = [i.toJSON() for i in self.saleatributos_set.all()]
         return item
 
     class Meta:
@@ -215,5 +214,26 @@ class SaleProduct(models.Model):
     class Meta:
         verbose_name = 'Detalle de Venta'
         verbose_name_plural = 'Detalle de Ventas'
+        default_permissions = ()
+        ordering = ['id']
+
+
+class SaleAtributos(models.Model):
+    sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
+    atributo = models.ForeignKey(Atributos, on_delete=models.CASCADE)
+    costo = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.atributo.atributo
+
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['sale'])
+        item['atributo'] = self.atributo.toJSON()
+        item['costo'] = f'{self.costo:.2f}'
+        return item
+
+    class Meta:
+        verbose_name = 'Detalle de Atributos'
+        verbose_name_plural = 'Detalle de Atributo'
         default_permissions = ()
         ordering = ['id']
