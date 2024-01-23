@@ -48,10 +48,17 @@ var sale = {
                     }
                 },
                 {
-                    targets: [-3, -4, -5, -6],
+                    targets: [-3, -4, -6],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '$' + parseFloat(data).toFixed(2);
+                        return '$ ' + parseFloat(data).toFixed(2);
+                    }
+                },
+                                {
+                    targets: [-5],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '% ' + parseFloat(data).toFixed(2);
                     }
                 },
                 {
@@ -117,7 +124,7 @@ $(function () {
             language: 'auto',
             startDate: new Date(),
             locale: {
-                format: 'YYYY-MM-DD',
+                format: 'DD-MM-YYYY',
             }
         });
 
