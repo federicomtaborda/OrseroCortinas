@@ -1,5 +1,5 @@
 var atributos = {
-    list: function () {
+    list: function (d) {
         $('#data').DataTable({
             responsive: true,
             autoWidth: false,
@@ -21,7 +21,6 @@ var atributos = {
                 // {"data": "id"},
                 {"data": "producto"},
                 {"data": "atributo"},
-                {"data": "costo"},
                 {"data": "id"},
             ],
             columnDefs: [

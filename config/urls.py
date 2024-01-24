@@ -26,6 +26,7 @@ from rest_framework.authtoken import views
 urlpatterns = [
     # path('', IndexView.as_view(), name='index'),
     path('', include('core.login.urls')),
+    path('login/', include('core.login.urls')),
     path('admin/', admin.site.urls),
     path('pos/', include('core.pos.urls')),
     path('reports/', include('core.reports.urls')),

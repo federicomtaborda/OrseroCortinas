@@ -48,10 +48,17 @@ var sale = {
                     }
                 },
                 {
-                    targets: [-3, -4, -5, -6],
+                    targets: [-3, -4, -6],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '$' + parseFloat(data).toFixed(2);
+                        return '$ ' + parseFloat(data).toFixed(2);
+                    }
+                },
+                                {
+                    targets: [-5],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '% ' + parseFloat(data).toFixed(2);
                     }
                 },
                 {
@@ -99,7 +106,7 @@ var sale = {
             html += '<tr>';
             html += '</tr>';
             html += '<tr>';
-            html += '<td colspan="6">Observaciones: <i>' + value.observaciones + '</i></td>';
+            html += '<td colspan="6">Observaciones: <i>' + (value.observaciones ? value.observaciones : '') + '</i></td>';
             html += '<tr style="height: 1px;"><td colspan="6"></td></tr>';
             html += '</tr>';
         });
@@ -117,7 +124,7 @@ $(function () {
             language: 'auto',
             startDate: new Date(),
             locale: {
-                format: 'YYYY-MM-DD',
+                format: 'DD-MM-YYYY',
             }
         });
 
