@@ -25,7 +25,6 @@ class AtributosListView(ValidatePermissionRequiredMixin, ListView):
                         'id': atributo.id,
                         'producto': atributo.producto.name,
                         'atributo': atributo.atributo,
-                        'costo': atributo.costo,
                     }
                     data.append(i)
             else:

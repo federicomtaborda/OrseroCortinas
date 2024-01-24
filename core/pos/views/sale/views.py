@@ -99,11 +99,10 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                     for i in products:
                         costos = 0
                         for a in i['atributos']:
-                            print(a);
                             atributos = SaleAtributos()
                             atributos.sale_id = int(sale.id)
                             atributos.atributo_id = int(a['id'])
-                            atributos.costo = float(a['precio'])
+                            atributos.costo = float(a['precio']) if 'precio' in a else 0
                             costos += atributos.costo
                             atributos.save()
                         detail = SaleProduct()

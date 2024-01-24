@@ -25,17 +25,25 @@ ESTADO_VENTA = (
 
 # Descripción de Atributos
 class DescripcionAtributo:
-    costo_proveedor = 'Costo proveedor'
-    costo_transporte = 'Costo transporte'
-    costo_colocacion = 'Costo colocación'
+    costo_proveedor = 'Costo Proveedor'
+    costo_barrales = 'Costo Barrales'
+    costo_telas = 'Costo en Telas'
+    costo_rieles = 'Costo en Rieles'
+    costo_taller = 'Costo en Taller'
+    costo_transporte = 'Costo Transporte'
+    costo_colocacion = 'Costo Colocación'
     otros_costos = 'Otros Costos'
 
 
 DESCRIPCION_ATRIBUTO = (
-    (DescripcionAtributo.costo_proveedor, "Costo proveedor"),
-    (DescripcionAtributo.costo_transporte, "Costo transporte"),
-    (DescripcionAtributo.costo_colocacion, "Costo colocación"),
-    (DescripcionAtributo.otros_costos, "Otros costos"),
+    (DescripcionAtributo.costo_proveedor, "Costo Proveedor"),
+    (DescripcionAtributo.costo_barrales, "Costo Barrales"),
+    (DescripcionAtributo.costo_telas, "Costo en Telas"),
+    (DescripcionAtributo.costo_rieles, "Costo en Rieles"),
+    (DescripcionAtributo.costo_taller, "Costo Taller"),
+    (DescripcionAtributo.costo_transporte, "Costo Transporte"),
+    (DescripcionAtributo.costo_colocacion, "Costo Colocación"),
+    (DescripcionAtributo.otros_costos, "Otros Costos"),
     )
 
 

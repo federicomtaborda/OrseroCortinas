@@ -129,7 +129,7 @@ var sale = {
             html += '<tr>';
             html += '<td>' + value.atributo + '</td>';
             html += '<td><input type="number" name="importe-atributo" class="form-control form-control-sm input-sm" ' +
-                'autocomplete="off" min="0" value="' + (typeof value.precio !== 'undefined' ? value.precio : '0.00') + '"></td>';
+                'autocomplete="off" min="0" value="' + (typeof value.precio !== 'undefined' ? value.precio : "0.00") + '"></td>';
             html += '</tr>';
         });
         html += '<div class="form-group">';

@@ -106,7 +106,7 @@ var sale = {
             html += '<tr>';
             html += '</tr>';
             html += '<tr>';
-            html += '<td colspan="6">Observaciones: <i>' + value.observaciones + '</i></td>';
+            html += '<td colspan="6">Observaciones: <i>' + (value.observaciones ? value.observaciones : '') + '</i></td>';
             html += '<tr style="height: 1px;"><td colspan="6"></td></tr>';
             html += '</tr>';
         });
