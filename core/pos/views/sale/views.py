@@ -222,7 +222,6 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                                 atributos.costo = float(a['precio'])
                                 costos += atributos.costo
                                 atributos.save()
-                                print(atributos)
                             detail = SaleProduct()
                             detail.sale_id = sale.id
                             detail.product_id = int(i['id'])
