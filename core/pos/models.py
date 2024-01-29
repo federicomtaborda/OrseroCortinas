@@ -166,6 +166,8 @@ class Sale(models.Model):
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total_iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    ganancia = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    total_ganancia = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     estado = models.CharField(u'Estado Venta', max_length=60, choices=ESTADO_VENTA,
                               default=EstadoVenta.presupuestada)
@@ -189,6 +191,8 @@ class Sale(models.Model):
         item['subtotal'] = f'{self.subtotal:.2f}'
         item['iva'] = f'{self.iva:.2f}'
         item['total_iva'] = f'{self.total_iva:.2f}'
+        # item['ganancia'] = f'{self.ganancia:.2f}'
+        # item['total_ganancia'] = f'{self.total_ganancia:.2f}'
         item['total'] = f'{self.total:.2f}'
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['saleproduct'] = [i.toJSON() for i in self.saleproduct_set.all()]

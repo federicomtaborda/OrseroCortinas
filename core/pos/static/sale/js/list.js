@@ -34,6 +34,8 @@ var sale = {
                 {"data": "subtotal"},
                 {"data": "iva"},
                 {"data": "total_iva"},
+                {"data": "ganancia"},
+                {"data": "total_ganancia"},
                 {"data": "total"},
                 {"data": "estado"},
                 {"data": "id"},
@@ -48,14 +50,14 @@ var sale = {
                     }
                 },
                 {
-                    targets: [-3, -4, -6],
+                    targets: [-3, -4, -6, -8],
                     class: 'text-center',
                     render: function (data, type, row) {
                         return '$ ' + parseFloat(data).toFixed(2);
                     }
                 },
                                 {
-                    targets: [-5],
+                    targets: [-5, -7],
                     class: 'text-center',
                     render: function (data, type, row) {
                         return '% ' + parseFloat(data).toFixed(2);
@@ -74,10 +76,10 @@ var sale = {
                     }
                 },
                 {
-                    targets: [-2, -7],
+                    targets: [-2],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '<p>' + data + '</p>';
+                        return '<p class="text-danger">' + data + '</p>';
                     }
                 },
             ],

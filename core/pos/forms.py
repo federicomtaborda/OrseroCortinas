@@ -143,6 +143,10 @@ class SaleForm(ModelForm):
                                            ),
             'iva': forms.TextInput(attrs={
                 'class': 'form-control',
+                'id': '#iva',
+            }),
+            'ganancia': forms.TextInput(attrs={
+                'class': 'form-control',
             }),
             'subtotal': forms.TextInput(attrs={
                 'readonly': True,

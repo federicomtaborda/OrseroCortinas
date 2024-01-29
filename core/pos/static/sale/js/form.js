@@ -7,6 +7,7 @@ var sale = {
     details: {
         subtotal: 0.00,
         iva: 0.00,
+        ganancia: 0.00,
         total: 0.00,
         products: []
     },
@@ -29,6 +30,7 @@ var sale = {
     calculateInvoice: function () {
         var subtotal = 0.00;
         var iva = $('input[name="iva"]').val();
+        var ganancia = $('input[name="ganancia"]').val();
         this.details.products.forEach(function (value, index, array) {
             value.index = index;
             value.cant = parseInt(value.cant);
@@ -39,10 +41,12 @@ var sale = {
 
         this.details.subtotal = subtotal;
         this.details.iva = this.details.subtotal * iva / 100;
-        this.details.total = this.details.subtotal + this.details.iva;
+        this.details.ganancia = this.details.subtotal * ganancia / 100;
+        this.details.total = this.details.subtotal + this.details.iva + this.details.ganancia;
 
         $('input[name="subtotal"]').val(this.details.subtotal.toFixed(2));
         $('input[name="ivacalc"]').val(this.details.iva.toFixed(2));
+        $('input[name="gananciacalc"]').val(this.details.ganancia.toFixed(2));
         $('input[name="total"]').val(this.details.total.toFixed(2));
     },
     addProduct: function (item) {
@@ -443,7 +447,19 @@ $(function () {
         postfix: '%'
     }).on('change', function () {
         sale.calculateInvoice();
-    }).val(21);
+    });
+
+    $("input[name='ganancia']").TouchSpin({
+        min: 0,
+        max: 100,
+        step: 1,
+        decimals: 2,
+        boostat: 5,
+        maxboostedstep: 10,
+        postfix: '%'
+    }).on('change', function () {
+        sale.calculateInvoice();
+    });
 
     $('#frmSale').on('submit', function (e) {
         e.preventDefault();

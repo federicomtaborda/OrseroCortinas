@@ -94,6 +94,7 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                     sale.date_joined = request.POST['date_joined']
                     sale.client_id = int(request.POST['client'])
                     sale.iva = float(request.POST['iva'])
+                    sale.ganancia = float(request.POST['ganancia'])
                     sale.save()
                     products = json.loads(request.POST['products'])
                     for i in products:
@@ -118,7 +119,8 @@ class SaleCreateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Create
                         subtotal += detail.subtotal
                     sale.subtotal = subtotal
                     sale.total_iva = subtotal * float(request.POST['iva']) / 100
-                    sale.total = sale.subtotal + sale.total_iva
+                    sale.total_ganancia = subtotal * float(request.POST['ganancia']) / 100
+                    sale.total = sale.subtotal + sale.total_iva + sale.total_ganancia
                     sale.save()
                     data = {'id': sale.id}
             elif action == 'search_client':
@@ -176,6 +178,7 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                     if c['id'] == a.atributo_id:
                             c['precio'] = float(a.costo)
             data.append(item)
+            print(data)
         return json.dumps(data)
 
     def post(self, request, *args, **kwargs):
@@ -211,15 +214,17 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                         sale.date_joined = request.POST['date_joined']
                         sale.client_id = int(request.POST['client'])
                         sale.iva = float(request.POST['iva'])
+                        sale.ganancia = float(request.POST['ganancia'])
                         sale.save()
                         sale.saleproduct_set.all().delete()
+                        sale.saleatributos_set.all().delete()
                         for i in products:
                             costos = 0
                             for a in i['atributos']:
                                 atributos = SaleAtributos()
                                 atributos.sale_id = int(sale.id)
-                                atributos.atributo_id = int(a['producto'])
-                                atributos.costo = float(a['precio'])
+                                atributos.atributo_id = int(a['id'])
+                                atributos.costo = float(a['precio']) if 'precio' in a else 0
                                 costos += atributos.costo
                                 atributos.save()
                             detail = SaleProduct()
@@ -235,7 +240,8 @@ class SaleUpdateView(ExistsCompanyMixin, ValidatePermissionRequiredMixin, Update
                             subtotal += detail.subtotal
                         sale.subtotal = subtotal
                         sale.total_iva = subtotal * float(request.POST['iva']) / 100
-                        sale.total = sale.subtotal + sale.total_iva
+                        sale.total_ganancia = subtotal * float(request.POST['ganancia']) / 100
+                        sale.total = sale.subtotal + sale.total_iva + sale.total_ganancia
                         sale.save()
                         data = {'id': sale.id}
                     data = {'id': sale.id}
